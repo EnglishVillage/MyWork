@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/../Jcseg" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../Jcseg/jcseg-analyzer" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../Jcseg/jcseg-core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../Jcseg/jcseg-elasticsearch" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../Jcseg/jcseg-server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../pharmcube-base-api/base-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../pharmcube-base-api/base-server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../pharmcube-discover-api/discover-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../pharmcube-discover-api/discover-server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../pharmcube-search-discover/search-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../pharmcube-search-discover/search-server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../pharmcube-search-framework/search-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../pharmcube-search-framework/search-server" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/MyWork.iml" filepath="$PROJECT_DIR$/MyWork.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../pharmcube-base-api/pharmcube-base.iml" filepath="$PROJECT_DIR$/../pharmcube-base-api/pharmcube-base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../pharmcube-base-api/base-api/pharmcube-base-api.iml" filepath="$PROJECT_DIR$/../pharmcube-base-api/base-api/pharmcube-base-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../pharmcube-base-api/base-server/pharmcube-base-server.iml" filepath="$PROJECT_DIR$/../pharmcube-base-api/base-server/pharmcube-base-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../pharmcube-discover-api/pharmcube-discover.iml" filepath="$PROJECT_DIR$/../pharmcube-discover-api/pharmcube-discover.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../pharmcube-discover-api/discover-api/pharmcube-discover-api.iml" filepath="$PROJECT_DIR$/../pharmcube-discover-api/discover-api/pharmcube-discover-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../pharmcube-discover-api/discover-server/pharmcube-discover-server.iml" filepath="$PROJECT_DIR$/../pharmcube-discover-api/discover-server/pharmcube-discover-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../pharmcube-search-framework/search-api/pharmcube-search-api.iml" filepath="$PROJECT_DIR$/../pharmcube-search-framework/search-api/pharmcube-search-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../pharmcube-search-framework/pharmcube-search-framework.iml" filepath="$PROJECT_DIR$/../pharmcube-search-framework/pharmcube-search-framework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../pharmcube-search-framework/search-server/pharmcube-search-server.iml" filepath="$PROJECT_DIR$/../pharmcube-search-framework/search-server/pharmcube-search-server.iml" />
+    </modules>
+  </component>
+</project>
