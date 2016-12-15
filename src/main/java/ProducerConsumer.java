@@ -1,5 +1,4 @@
-import SolrModel.Company;
-import SolrModel.DiscoverDrugs;
+import SolrModel.*;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -47,6 +46,34 @@ class Consumer<T> implements Runnable {
                     case "discoverdrugs":
                         DiscoverDrugs c2 = (DiscoverDrugs) product.model;
                         ESUtilsNew.operIndex(index, type, c2.getId(), 0, null, c2);
+                        break;
+                    case "discoverdrugscountry":
+                        DiscoverDrugsCountry c3 = (DiscoverDrugsCountry) product.model;
+                        ESUtilsNew.operIndex(index, type, c3.getId(), 0, null, c3);
+                        break;
+                    case "discoverdrugsnamedic":
+                        DiscoverDrugsNameDic c4 = (DiscoverDrugsNameDic) product.model;
+                        ESUtilsNew.operIndex(index, type, c4.getId(), 0, null, c4);
+                        break;
+                    case "discoverdrugssalse":
+                        DiscoverDrugsSalse c5 = (DiscoverDrugsSalse) product.model;
+                        ESUtilsNew.operIndex(index, type, c5.getId(), 0, null, c5);
+                        break;
+                    case "discoverlateststage":
+                        DiscoverLatestStage c6 = (DiscoverLatestStage) product.model;
+                        ESUtilsNew.operIndex(index, type, c6.getId(), 0, null, c6);
+                        break;
+                    case "discovertargetlateststage":
+                        DiscoverTargetLatestStage c7 = (DiscoverTargetLatestStage) product.model;
+                        ESUtilsNew.operIndex(index, type, c7.getId(), 0, null, c7);
+                        break;
+                    case "indication":
+                        Indication c8 = (Indication) product.model;
+                        ESUtilsNew.operIndex(index, type, c8.getId(), 0, null, c8);
+                        break;
+                    case "target":
+                        Target c9 = (Target) product.model;
+                        ESUtilsNew.operIndex(index, type, c9.getId(), 0, null, c9);
                         break;
                 }
                 if(s.isOK && s.queues.isEmpty()){
@@ -101,6 +128,27 @@ class Producer implements Runnable {
                 case "discoverdrugs":
                     obj = gson.fromJson(json, DiscoverDrugs.class);
                     break;
+                case "discoverdrugscountry":
+                    obj = gson.fromJson(json, DiscoverDrugsCountry.class);
+                    break;
+                case "discoverdrugsnamedic":
+                    obj = gson.fromJson(json, DiscoverDrugsNameDic.class);
+                    break;
+                case "discoverdrugssalse":
+                    obj = gson.fromJson(json, DiscoverDrugsSalse.class);
+                    break;
+                case "discoverlateststage":
+                    obj = gson.fromJson(json, DiscoverLatestStage.class);
+                    break;
+                case "discovertargetlateststage":
+                    obj = gson.fromJson(json, DiscoverTargetLatestStage.class);
+                    break;
+                case "indication":
+                    obj = gson.fromJson(json, Indication.class);
+                    break;
+                case "target":
+                    obj = gson.fromJson(json, Target.class);
+                    break;
             }
             try {
                 s.push(new Product(index, type, obj));
@@ -119,7 +167,8 @@ class Producer implements Runnable {
 class Storage {
     public boolean isOK = false;
 
-    BlockingQueue<Product> queues = new LinkedBlockingQueue<Product>(110);
+    //不指定大小
+    BlockingQueue<Product> queues = new LinkedBlockingQueue<Product>();
 
     /**
      * 生产

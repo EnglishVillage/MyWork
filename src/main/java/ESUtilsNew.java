@@ -1,3 +1,5 @@
+import SolrModel.Company;
+import SolrModel.CompanyIndex;
 import com.google.gson.Gson;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
@@ -12,6 +14,7 @@ import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.deletebyquery.DeleteByQueryAction;
 import org.elasticsearch.action.deletebyquery.DeleteByQueryRequestBuilder;
 import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse;
+import org.elasticsearch.action.get.GetRequestBuilder;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.get.MultiGetItemResponse;
 import org.elasticsearch.action.get.MultiGetResponse;
@@ -71,7 +74,10 @@ import org.junit.Test;
 import solutions.siren.join.SirenJoinPlugin;
 import solutions.siren.join.action.coordinate.CoordinateSearchRequestBuilder;
 
+import javax.swing.text.StyledEditorKit;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
@@ -86,16 +92,11 @@ import static solutions.siren.join.index.query.QueryBuilders.filterJoin;
 public class ESUtilsNew {
     String index = "testcreateindex";
     String type = "testtype";
+    String id = null;
 
     @Test
-    public void mytest() {
-//        ESUtilsNew.operDelete("iteblog_book_index",null,null);
-//        ESUtilsNew.operDelete("newkangkang",null,null);
-//        ESUtilsNew.operDelete("testcreateindex",null,null);
-
-        //ESUtilsNew.operDelete("base_new", "yymf_drugs_cn", null);
-
-        index = "newkangkangaaa";
+    public void mytest() throws Exception {
+        index = "newkangkang";
         type = "newdata";
 //        QueryBuilder query = QueryBuilders.matchAllQuery();
 //        QueryBuilder filter = null;
@@ -104,10 +105,50 @@ public class ESUtilsNew {
 //                //SortBuilders.fieldSort("transxm").order(SortOrder.DESC),
 //                SortBuilders.fieldSort("custid").order(SortOrder.ASC)
 //        };
+        //ESUtilsNew.operDelete("discoverdrugs2","discoverdrugs",null);
 
 
-        ESUtilsNew.operDelete("discoverdrugs2","discoverdrugs",null);
+        index = "company";
+        type = "company";
+//        System.out.println(deleteSolr("3015"));
+        String[] strs = {"{\"id\":\"1590\",\"code\":\"C00000111\"}",
+                "{\"id\":\"1591\",\"code\":\"C00000222\"}",
+                "{\"id\":\"1592\",\"code\":\"C00000333\"}"
+        };
+        Gson gson = new Gson();
+        ArrayList<Company> companies = new ArrayList<>();
+        for (String str : strs) {
+            companies.add(gson.fromJson(str,Company.class));
+        }
+        System.out.println(updateIndexFullAmount(companies));
+
+        System.out.println();
     }
+
+    public Long updateIndexFullAmount(List<Company> companyList) throws Exception {
+        try {
+            ArrayList<String> jsons = new ArrayList<String>(30);
+            ArrayList<String> ids = new ArrayList<String>(30);
+            for (Company company : companyList) {
+                jsons.add(ESUtilsNew.ObjectToJson(company));
+                ids.add(company.getId());
+            }
+            ESUtilsNew.operBulk(index, type, jsons,ids);
+            return 1l;
+        } catch (Exception e) {
+            return 0l;
+        }
+    }
+
+    public Long deleteSolr(String id) {
+        try {
+            boolean result = ESUtilsNew.operDeleteSoft(index, type, id);
+            return result ? 1l : 0l;
+        } catch (Exception e) {
+            return 0l;
+        }
+    }
+
 
     /**
      * 作者: 王坤造
@@ -189,7 +230,7 @@ public class ESUtilsNew {
         ESUtilsNew.operIndex(index, type, id, 0, parent, source2);//修改：必须确定id
         ESUtilsNew.operIndex(index, type, id2, 0, parent, source2);//修改：必须确定id
         ESUtilsNew.operIndex(index, type, id3, 0, parent, source);//修改：必须确定id
-        Map<String, Object> map = ESUtilsNew.operGet(index, type, id3);
+        ESUtilsNew.operGet(index, type, id3);
         List<Map<String, Object>> list = ESUtilsNew.operGetMulti(index, type, id, id2, id3);
         System.out.println("id:'" + id3 + "'删除成功：" + ESUtilsNew.operDelete(index, type, id3));
         //1.修改字段值
@@ -247,8 +288,8 @@ public class ESUtilsNew {
 //
 //        System.out.println(ESUtilsNew.getMapping(index, type));
 //        //字段查询
-//        query = QueryBuilders.termQuery("merchants", "Harvey Nichols");//no   【string默认有分词】
 //        //filter= QueryBuilders.termQuery("merchants", "aaa");//no   【string默认有分词】
+//        query = QueryBuilders.termQuery("merchants", "Harvey Nichols");//no
 //        ESUtilsNew.operSearch(new String[]{index}, new String[]{type}, query, filter, sorts, 0, 20);
 //        query = QueryBuilders.matchQuery("merchants", "Harvey Nichols");//yes
 //        ESUtilsNew.operSearch(new String[]{index}, new String[]{type}, query, filter, sorts, 0, 20);
@@ -256,7 +297,7 @@ public class ESUtilsNew {
 //        ESUtilsNew.operSearch(new String[]{index}, new String[]{type}, query, filter, sorts, 0, 20);
 //        query = QueryBuilders.matchQuery("merchants", "chols");//no     【根据空格分词】
 //        ESUtilsNew.operSearch(new String[]{index}, new String[]{type}, query, filter, sorts, 0, 20);
-//        query = QueryBuilders.termQuery("atmFrequency", 10);     //yes          【long默认有分词】
+//        query = QueryBuilders.termQuery("atmFrequency", 10);     //yes
 //        ESUtilsNew.operSearch(new String[]{index}, new String[]{type}, query, filter, sorts, 0, 20);
 //        query = QueryBuilders.matchQuery("atmFrequency", 10);     //yes
 //        ESUtilsNew.operSearch(new String[]{index}, new String[]{type}, query, filter, sorts, 0, 20);
@@ -660,9 +701,6 @@ public class ESUtilsNew {
 //        }
 
 
-
-
-
         //分组再分组再统计
         //aggBuilders = new AbstractAggregationBuilder[]{
         //        AggregationBuilders.terms(aggNames[0]).field("merchants"),
@@ -713,9 +751,9 @@ public class ESUtilsNew {
          //子文档
          curl -XPUT "http://192.168.2.124:9200/parent/employee/1?parent=london&pretty" -d '
          {
-             "name":  "Alice Smith",
-             "dob":   "1970-10-24",
-             "hobby": "hiking"
+         "name":  "Alice Smith",
+         "dob":   "1970-10-24",
+         "hobby": "hiking"
          }'
 
          curl -XPOST 'http://192.168.2.124:9200/parent/employee/_bulk' -d '
@@ -844,8 +882,8 @@ public class ESUtilsNew {
                 filterJoin("id").indices("articles").types("article").path("mentions").query(
                         QueryBuilders.boolQuery().filter(QueryBuilders.termQuery("title", "nosql"))
                 )
-                .orderBy("default")//只有2种排序方式:default,doc_score
-                .maxTermsPerShard(5)//每个分片存储最多分组数量
+                        .orderBy("default")//只有2种排序方式:default,doc_score
+                        .maxTermsPerShard(5)//每个分片存储最多分组数量
         );
         //下面这个是简洁写法
         //filter=filterJoin("id").indices("articles").types("article").path("mentions").query(
@@ -875,7 +913,8 @@ public class ESUtilsNew {
      * 日期: 16-11-23 下午6:24
      * 名称：获取index下type的mapping信息
      * 备注：
-     */@Deprecated
+     */
+    @Deprecated
     public static String getMapping(String index, String type) {
         Client client = ESClientHelper.getInstance().getClient();
         try {
@@ -944,7 +983,8 @@ public class ESUtilsNew {
      * 名称：创建空索引 默认setting 无mapping
      * 备注：5个分片，1个备份
      * 索引存在会抛出异常：IndexAlreadyExistsException
-     */@Deprecated
+     */
+    @Deprecated
     public static boolean createIndex(String index) {
         try {
             Client client = ESClientHelper.getInstance().getClient();
@@ -984,7 +1024,8 @@ public class ESUtilsNew {
      * 备注：如果index中已经有相同的字段，但是这次修改mapping跟上次类型不一致，则会报如下异常
      * java.lang.IllegalArgumentException:
      * mapper [name] of different type, current_type [string], merged_type [long]
-     */@Deprecated
+     */
+    @Deprecated
     public static boolean createType(String index, String type, XContentBuilder mapping) {
         Client client = ESClientHelper.getInstance().getClient();
         PutMappingResponse response = client.admin().indices()
@@ -1003,7 +1044,8 @@ public class ESUtilsNew {
      * id:主键，1.id存在情况下优先删除id
      * type：表，2.id不存在，优先删除type
      * index:数据库，3.type不存在，删除index
-     */@Deprecated
+     */
+    @Deprecated
     public static boolean operDelete(String index, String type, String id) {
         Client client = ESClientHelper.getInstance().getClient();
         try {
@@ -1046,6 +1088,17 @@ public class ESUtilsNew {
 
     /**
      * 作者: 王坤造
+     * 日期: 16-11-15 下午5:34
+     * 名称：软删除
+     * 备注：
+     */
+    public static boolean operDeleteSoft(String index, String type, String id) {
+        //new Script("ctx._source.gender = \"male\"")   格式：【ctx.source.属性名=XXXX】
+        return operUpdate(index, type, id, new Script("ctx._source.isDelete = true"));
+    }
+
+    /**
+     * 作者: 王坤造
      * 日期: 16-11-15 下午5:33
      * 名称：添加/修改
      * 备注：
@@ -1054,7 +1107,44 @@ public class ESUtilsNew {
      * id:主键【不指定则自动生成，自动生成则无法修改】
      * version:版本号，修改的时候加上version，避免覆盖掉新的数据。.【如果小于1则不设置版本号】
      * source：数据源【不可以为空，对象个数至少一个或者为偶数个。】
-     */@Deprecated
+     */
+    public static boolean operIndex(String index, String type, String id, Object source) {
+        if (source == null) {
+            System.err.println("插入数据不可以为可空！");
+            return false;
+        } else {
+            //转化为json字符串
+            String jsonArr = ObjectToJson(source);
+            Client client = ESClientHelper.getInstance().getClient();
+            //初始化Request，传入index和type参数
+            IndexRequestBuilder request = client.prepareIndex(index, type);
+            //id不为空,传入id参数;id为空，则自动生成
+            if (id != null) {
+                request = request.setId(id);//必须为对象单独指定ID,不指定则自动生成
+            }
+            request = request.setSource(jsonArr);
+            //执行操作，并返回操作结果,底层调用//.execute().actionGet();
+            IndexResponse response = request.get();
+            //多次index这个版本号会变
+            //System.out.println("index response.version():" + response.getVersion());
+            //response.isCreated();//只返回新增是否成功
+            //返回新增或者修改是否成功
+            return response.isContextEmpty();
+        }
+    }
+
+    /**
+     * 作者: 王坤造
+     * 日期: 16-11-15 下午5:33
+     * 名称：添加/修改
+     * 备注：
+     * index:数据库
+     * type：表
+     * id:主键【不指定则自动生成，自动生成则无法修改】
+     * version:版本号，修改的时候加上version，避免覆盖掉新的数据。.【如果小于1则不设置版本号】
+     * source：数据源【不可以为空，对象个数至少一个或者为偶数个。】
+     */
+    @Deprecated
     public static boolean operIndex(String index, String type, String id, long currVersion, String parent, Object source) {
         if (source == null) {
             System.err.println("插入数据不可以为可空！");
@@ -1105,12 +1195,13 @@ public class ESUtilsNew {
      * index:数据库【不存在会报错】
      * type：表，不存在不会报错
      * id:主键
+     * 返回json字符串
      */
-    public static Map<String, Object> operGet(String index, String type, String id) {
+    public static String operGet(String index, String type, String id) {
         Client client = ESClientHelper.getInstance().getClient();
         try {
             GetResponse response = client.prepareGet(index, type, id).get();//执行操作，并返回操作结果,底层调用//.execute().actionGet();
-            return printGetResponse(response);
+            return response.getSourceAsString();
         } catch (IndexNotFoundException ex) {
             System.err.println("index 不存在！");
             return null;
@@ -1118,6 +1209,49 @@ public class ESUtilsNew {
             ex.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * 作者: 王坤造
+     * 日期: 16-11-15 下午5:34
+     * 名称：获取一个
+     * 备注：3个参数一个都不能少。
+     * index:数据库【不存在会报错】
+     * type：表，不存在不会报错
+     * id:主键
+     * clazz:要转化的Class对象
+     */
+    public static <T> T operGet(String index, String type, String id, Class<T> clazz) {
+        Client client = ESClientHelper.getInstance().getClient();
+        GetResponse response = client.prepareGet(index, type, id).get();//执行操作，并返回操作结果,底层调用//.execute().actionGet();
+        String json = response.getSourceAsString();
+        Gson gson = new Gson();
+        return gson.fromJson(json, clazz);
+    }
+
+    /**
+     * 作者: 王坤造
+     * 日期: 16-11-15 下午5:34
+     * 名称：获取一个(值是精确匹配,不是模糊匹配)
+     * 备注：3个参数一个都不能少。
+     * index:数据库【不存在会报错】
+     * type：表，不存在不会报错
+     * field:要查询字段
+     * value:字段值
+     * clazz:要转化的Class对象
+     */
+    public static <T> T operGetByField(String index, String type, String field, Object value, Class<T> clazz) {
+        Client client = ESClientHelper.getInstance().getClient();
+        SearchRequestBuilder request = client.prepareSearch(index, type);
+        QueryBuilder query = QueryBuilders.boolQuery().must(QueryBuilders.matchPhraseQuery(field, value)).must(QueryBuilders.matchQuery("isDelete", "false"));
+        request = request.setQuery(query);
+        SearchResponse response = request.setSize(1).get();
+        for (SearchHit hit : response.getHits()) {
+            String json = hit.getSourceAsString();
+            Gson gson = new Gson();
+            return gson.fromJson(json, clazz);
+        }
+        return null;
     }
 
     /**
@@ -1226,13 +1360,14 @@ public class ESUtilsNew {
      * 名称：批处理
      * 备注：
      * lines:json字符串集合
-     */@Deprecated
-    public static boolean operBulk(String index, String type, List<String> lines) {
+     */
+    @Deprecated
+    public static boolean operBulk(String index, String type, List<String> jsons,List<String> ids) {
         Client client = ESClientHelper.getInstance().getClient();
         try {
             BulkRequestBuilder bulkRequest = client.prepareBulk();
-            for (String line : lines) {
-                bulkRequest.add(client.prepareIndex(index, type).setSource(line));
+            for(int i=0;i<jsons.size();i++){
+                bulkRequest.add(client.prepareIndex(index, type,ids.get(i)).setSource(jsons.get(i)));
             }
             BulkResponse response = bulkRequest.get();
             return response.isContextEmpty();
@@ -1696,7 +1831,7 @@ class ESClientHelper {
     public static String clusterName = "testes";
     //存储es的ip,host
     private HashMap<String, Integer> ips = new HashMap<String, Integer>() {{
-        put("192.168.2.124", 9300);
+        put("192.168.2.150", 9300);
     }};
     private ConcurrentHashMap<String, Client> clientMap = new ConcurrentHashMap<String, Client>();
 

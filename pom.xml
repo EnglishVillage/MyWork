@@ -15,6 +15,7 @@
         <zookeeper.version>3.4.6</zookeeper.version>
         <solr.version>4.10.4</solr.version>
         <httpcomponents.version>4.2.1</httpcomponents.version>
+        <scala.version>2.11.8</scala.version>
     </properties>
 
 
@@ -124,7 +125,11 @@
 
 
 
-
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
 
 
 
