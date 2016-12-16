@@ -22,7 +22,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="MyWork" />
         <module name="pharmcube-base-api" />
         <module name="pharmcube-base-server" />
         <module name="pharmcube-discover-api" />

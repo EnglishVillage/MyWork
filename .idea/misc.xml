@@ -44,7 +44,6 @@
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
-        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/../pharmcube-base-api/pom.xml" />
         <option value="$PROJECT_DIR$/../pharmcube-discover-api/pom.xml" />
         <option value="$PROJECT_DIR$/../pharmcube-search-discover/pom.xml" />
