@@ -1,7 +1,9 @@
+package MyWork;
+
 import SolrModel.*;
 import com.google.gson.Gson;
+import elasticsearch.api.ESUtils;
 
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -41,39 +43,39 @@ class Consumer<T> implements Runnable {
                 switch (type) {
                     case "company":
                         Company c1 = (Company) product.model;
-                        ESUtilsNew.operIndex(index, type, c1.getId(), 0, null, c1);
+                        ESUtils.operIndex(index, type, c1.getId(), 0, null, c1);
                         break;
                     case "discoverdrugs":
                         DiscoverDrugs c2 = (DiscoverDrugs) product.model;
-                        ESUtilsNew.operIndex(index, type, c2.getId(), 0, null, c2);
+                        ESUtils.operIndex(index, type, c2.getId(), 0, null, c2);
                         break;
                     case "discoverdrugscountry":
                         DiscoverDrugsCountry c3 = (DiscoverDrugsCountry) product.model;
-                        ESUtilsNew.operIndex(index, type, c3.getId(), 0, null, c3);
+                        ESUtils.operIndex(index, type, c3.getId(), 0, null, c3);
                         break;
                     case "discoverdrugsnamedic":
                         DiscoverDrugsNameDic c4 = (DiscoverDrugsNameDic) product.model;
-                        ESUtilsNew.operIndex(index, type, c4.getId(), 0, null, c4);
+                        ESUtils.operIndex(index, type, c4.getId(), 0, null, c4);
                         break;
                     case "discoverdrugssalse":
                         DiscoverDrugsSalse c5 = (DiscoverDrugsSalse) product.model;
-                        ESUtilsNew.operIndex(index, type, c5.getId(), 0, null, c5);
+                        ESUtils.operIndex(index, type, c5.getId(), 0, null, c5);
                         break;
                     case "discoverlateststage":
                         DiscoverLatestStage c6 = (DiscoverLatestStage) product.model;
-                        ESUtilsNew.operIndex(index, type, c6.getId(), 0, null, c6);
+                        ESUtils.operIndex(index, type, c6.getId(), 0, null, c6);
                         break;
                     case "discovertargetlateststage":
                         DiscoverTargetLatestStage c7 = (DiscoverTargetLatestStage) product.model;
-                        ESUtilsNew.operIndex(index, type, c7.getId(), 0, null, c7);
+                        ESUtils.operIndex(index, type, c7.getId(), 0, null, c7);
                         break;
                     case "indication":
                         Indication c8 = (Indication) product.model;
-                        ESUtilsNew.operIndex(index, type, c8.getId(), 0, null, c8);
+                        ESUtils.operIndex(index, type, c8.getId(), 0, null, c8);
                         break;
                     case "target":
                         Target c9 = (Target) product.model;
-                        ESUtilsNew.operIndex(index, type, c9.getId(), 0, null, c9);
+                        ESUtils.operIndex(index, type, c9.getId(), 0, null, c9);
                         break;
                 }
                 if(s.isOK && s.queues.isEmpty()){

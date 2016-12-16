@@ -1,3 +1,5 @@
+package MyWork;
+
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;

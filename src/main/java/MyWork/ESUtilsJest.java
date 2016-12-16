@@ -1,3 +1,5 @@
+package MyWork;
+
 import com.google.gson.Gson;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
@@ -43,7 +45,7 @@ public class ESUtilsJest {
 //        }};
 //        query = QueryBuilders.rangeQuery("birthday").from("2015-03-23").to("2016-03-23T19:32:43").includeUpper(true).includeLower(true);   //yes
 //
-//        ESUtilsJest.operSearch(indexes, types, query, sorts, 1, 10, Model.class);
+//        MyWork.ESUtilsJest.operSearchWithNoDel(indexes, types, query, sorts, 1, 10, MyWork.Model.class);
     }
 
     public static JestHttpClient getESClient() {
