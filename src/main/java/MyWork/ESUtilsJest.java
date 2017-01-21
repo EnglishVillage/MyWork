@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class ESUtilsJest {
     public static void main(String[] args) throws Exception {
-        createIndex("jestindex");
+        createIndex("ajestindex20161223");
 
 //        List<String> indexes = null;
 //        List<String> types = null;
@@ -44,28 +44,10 @@ public class ESUtilsJest {
 //            add("newdata");
 //        }};
 //        query = QueryBuilders.rangeQuery("birthday").from("2015-03-23").to("2016-03-23T19:32:43").includeUpper(true).includeLower(true);   //yes
-//
+
 //        MyWork.ESUtilsJest.operSearchWithNoDel(indexes, types, query, sorts, 1, 10, MyWork.Model.class);
     }
 
-    public static JestHttpClient getESClient() {
-        JestClientFactory factory = new JestClientFactory();
-        factory.setHttpClientConfig(new HttpClientConfig
-                //.Builder("http://192.168.2.150:9200")
-                .Builder("http://192.168.2.151:9200")
-                .discoveryEnabled(true)//开启发现
-                //.discoveryFrequency(500l, TimeUnit.MILLISECONDS)//发现频率
-                //.clusterName("")//这个不用设置???
-                .multiThreaded(true)
-                //.maxTotalConnection(5)
-                .build());
-        JestHttpClient client = (JestHttpClient) factory.getObject();
-        return client;
-    }
-
-    public static void closeClient(JestHttpClient client) {
-        client.shutdownClient();
-    }
 
 
     /**
@@ -75,7 +57,7 @@ public class ESUtilsJest {
      * 备注：
      */
     public static boolean isExistIndex(String... indexes) {
-        JestHttpClient client = getESClient();
+        JestHttpClient client = ESClientHelperJest.getInstance().getClient();
         try {
             String INDEX_NAME = "it_typexst_0";
             String EXISTING_INDEX_TYPE = "ittypex";
@@ -95,7 +77,7 @@ public class ESUtilsJest {
      * 备注：5个分片，1个备份
      */
     public static boolean createIndex(String index) throws IOException {
-        JestHttpClient client = getESClient();
+        JestHttpClient client = ESClientHelperJest.getInstance().getClient();
         // 如果索引存在,删除索引
         DeleteIndex deleteIndex = new DeleteIndex.Builder(index).build();
         client.execute(deleteIndex);
@@ -116,7 +98,7 @@ public class ESUtilsJest {
      * mapping:mapping的json字符串
      */
     public static boolean createType(String index, String type, String mapping) throws IOException {
-        JestHttpClient client = getESClient();
+        JestHttpClient client = ESClientHelperJest.getInstance().getClient();
         PutMapping map = new PutMapping.Builder(index, type, mapping).build();
         JestResult result = client.execute(map);
         return result.isSucceeded();
@@ -129,7 +111,7 @@ public class ESUtilsJest {
      * 备注：
      */
     public static String getMapping(List<String> indexes, List<String> types) throws IOException {
-        JestHttpClient client = getESClient();
+        JestHttpClient client = ESClientHelperJest.getInstance().getClient();
         GetMapping map = new GetMapping.Builder().addIndex(indexes).addType(types).build();
         JestResult result = client.execute(map);
         return result.getJsonString();
@@ -142,7 +124,7 @@ public class ESUtilsJest {
      * 备注：
      */
     public static boolean operDelete(String index) throws IOException {
-        JestHttpClient client = getESClient();
+        JestHttpClient client = ESClientHelperJest.getInstance().getClient();
         DeleteIndex indicesExists = new DeleteIndex.Builder(index).build();
         JestResult result = client.execute(indicesExists);
         System.out.println(result.getErrorMessage() + result.isSucceeded());
@@ -160,7 +142,7 @@ public class ESUtilsJest {
      * index:数据库，3.type不存在，删除index
      */
     public static boolean operDelete(String index, String type, String id) throws IOException {
-        JestHttpClient client = getESClient();
+        JestHttpClient client = ESClientHelperJest.getInstance().getClient();
         Delete delete = new Delete.Builder(id)
                 .index(index)
                 .type(type)
@@ -179,7 +161,7 @@ public class ESUtilsJest {
      * index:数据库，3.type不存在，删除index
      */
     public static void operDeleteAsync(String index, String type, String id) throws IOException {
-        JestHttpClient client = getESClient();
+        JestHttpClient client = ESClientHelperJest.getInstance().getClient();
         Delete delete = new Delete.Builder(id).index(index).type(type).build();
         client.executeAsync(delete, new JestResultHandler<DocumentResult>() {
             @Override
@@ -218,7 +200,7 @@ public class ESUtilsJest {
      * index:数据库，3.type不存在，删除index
      */
     public static boolean operDelete(String index, String type, QueryBuilder query) throws IOException {
-        JestHttpClient client = getESClient();
+        JestHttpClient client = ESClientHelperJest.getInstance().getClient();
         DeleteByQuery deleteByQuery = new DeleteByQuery.Builder(query.toString())
                 .addIndex(index)
                 .addType(type)
@@ -244,7 +226,7 @@ public class ESUtilsJest {
             System.err.println("插入数据不可以为可空！");
             return false;
         } else {
-            JestHttpClient client = getESClient();
+            JestHttpClient client = ESClientHelperJest.getInstance().getClient();
             Index.Builder builder = new Index.Builder(source);
             //builder.setHeader(PWDKEY, getSecret());
             builder.id(id);
@@ -264,7 +246,7 @@ public class ESUtilsJest {
      * lines:json字符串集合
      */
     public static <T extends Object> boolean operBulk(String index, String type, List<T> list) throws IOException {
-        JestHttpClient client = getESClient();
+        JestHttpClient client = ESClientHelperJest.getInstance().getClient();
         Bulk.Builder builder = new Bulk.Builder().defaultIndex(index).defaultType(type);
         for (T t : list) {
             //builder=builder.addAction(new Index.Builder(t).index(index).type(type).id("xxx").build());
@@ -284,10 +266,10 @@ public class ESUtilsJest {
      * filter:查询结果之后的过滤条件
      * sorts:排序字段及排序方式
      * pageIndex:页数[默认为1]
-     * pageSize:页码[默认为10]
+     * bulknum:页码[默认为10]
      */
     public static <T extends Object> List<T> operSearch(List<String> indexes, List<String> types, QueryBuilder query, List<Sort> sorts, int pageIndex, int pageSize, Class<T> tClass) throws IOException {
-        JestHttpClient client = getESClient();
+        JestHttpClient client = ESClientHelperJest.getInstance().getClient();
         Search search = new Search.Builder(query.toString())
                 .addIndex(indexes)
                 .addType(types)

@@ -30,13 +30,14 @@
         <module name="pharmcube-search-server" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="1.8">
+    <bytecodeTargetLevel target="1.7">
       <module name="jcseg" target="1.6" />
       <module name="jcseg-analyzer" target="1.6" />
       <module name="jcseg-core" target="1.6" />
       <module name="jcseg-elasticsearch" target="1.6" />
       <module name="jcseg-server" target="1.6" />
-      <module name="MyWork" target="1.8" />
+      <module name="MyES" target="1.7" />
+      <module name="MyWork" target="1.7" />
       <module name="pharmcube-base" target="1.5" />
       <module name="pharmcube-base-api" target="1.7" />
       <module name="pharmcube-base-server" target="1.7" />

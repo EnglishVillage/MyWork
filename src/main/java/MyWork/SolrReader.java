@@ -1,6 +1,6 @@
 package MyWork;
 
-import com.google.gson.Gson;
+import elasticsearch.api.ESUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -8,6 +8,7 @@ import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 
+import javax.annotation.Resource;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,9 @@ import java.util.List;
  * 备注：
  */
 public class SolrReader {
+
+//    @Resource
+//    private static ESUtils ESUtils;
 
     public static void main(String[] args) throws Exception {
         getHttpSolrServer();
@@ -43,7 +47,6 @@ public class SolrReader {
 
             int pageSize = 10;
             List<String> list = new ArrayList<>();
-            Gson gson = new Gson();
             long totalTimeBegin = System.currentTimeMillis();
             long perTimeBegin = totalTimeBegin;
             long perTimeEnd;
@@ -58,7 +61,7 @@ public class SolrReader {
                     query.setRows(pageSize);
                     response = solr.query(query);
                     results = response.getResults();
-                    //String jsons = gson.toJson(results);//得到集合json字符串,不能插入到es中
+                    //String jsons = GSON.toJson(results);//得到集合json字符串,不能插入到es中
                     //if (jsons.equals("[]")) {//空的集合就退出
                     //    break;
                     //} else {
@@ -66,7 +69,7 @@ public class SolrReader {
                     //}
                     if (results.size() > 0) {
                         for (k = 0; k < results.size(); k++) {
-                            json = gson.toJson(results.get(k));//得到单个对象json字符串
+                            json = ESUtils.ObjectToJson(results.get(k));//得到单个对象json字符串
                             list.add(json);
                         }
                     } else {//空的集合就退出
